@@ -140,8 +140,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True  # For development only!
   # Or, for more security:
-  # CORS_ALLOWED_ORIGINS = [
-  #     "http://localhost:5173",  # Vite default
-  #     "http://localhost:3000",  # CRA default
-  # ]
+CORS_ALLOWED_ORIGINS = [
+    
+    "http://localhost:5173",  # Vite default
+    "http://localhost:3000",# CRA default
+    "https://screening-assignment-tan.vercel.app"
+]
 
