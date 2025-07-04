@@ -1,0 +1,137 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Supply Chain - Wayne Enterprises{% endblock %}
+{% block content %}
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Supply Chain Analytics</h1>
+
+    <!-- Bar Chart -->
+    <div class="flex items-center justify-center ">
+    <!-- Bar Chart -->
+        <div class="chart-container bg-white p-6 rounded-lg shadow-md gap-6 m-2 w-full mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Total Revenue by Division (2024)</h2>
+            <canvas id="barChart"></canvas>
+        </div>
+
+    <!-- Line Chart -->
+        <div class="chart-container bg-white p-6 rounded-lg shadow-md gap-6 m-2 w-full mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Revenue Trend by Quarter (2024)</h2>
+            <canvas id="lineChart"></canvas>
+        </div>
+
+    <!-- Pie Chart -->
+        <div class="chart-container bg-white p-6 rounded-lg shadow-md gap-6 m-2 w-full mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Net Profit Share by Division (2024)</h2>
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-container">
+        <h2 class="text-xl font-semibold mb-4">Supply Chain Summary</h2>
+        <table class="table-auto">
+            <thead>
+                <tr>
+                    <th>Facility Location</th>
+                    <th>Product Line</th>
+                    <th>Date</th>
+                    <th>Production Volume</th>
+                    <th>Carbon Footprint (MT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in page_obj %}
+                <tr>
+                    <td>{{ row.Facility_Location }}</td>
+                    <td>{{ row.Product_Line }}</td>
+                    <td>{{ row.Date }}</td>
+                    <td>{{ row.Monthly_Production_Volume }}</td>
+                    <td>{{ row.Carbon_Footprint_MT }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="current" href="?page={{ num }}">{{ num }}</a>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ bar_labels|safe }},
+                datasets: [{
+                    label: 'Carbon Footprint (Metric Tons)',
+                    data: {{ bar_data|safe }},
+                    backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'],
+                    borderColor: ['#3b5a7b', '#b86b1f', '#a83e3e', '#538684', '#3f7a3b'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Carbon Footprint (MT)' } },
+                    x: { title: { display: true, text: 'Facility Location' } }
+                },
+                plugins: { legend: { display: true } }
+            }
+        });
+
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: {{ line_labels|safe }},
+                datasets: [{
+                    label: 'Production Volume',
+                    data: {{ line_data|safe }},
+                    borderColor: '#4e79a7',
+                    backgroundColor: 'rgba(78, 121, 167, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Production Volume' } },
+                    x: { title: { display: true, text: 'Date' } }
+                },
+                plugins: { legend: { display: true } }
+            }
+        });
+
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ pie_labels|safe }},
+                datasets: [{
+                    label: 'Vendor Count',
+                    data: {{ pie_data|safe }},
+                    backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'],
+                    borderColor: ['#3b5a7b', '#b86b1f', '#a83e3e', '#538684', '#3f7a3b'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'right' } }
+            }
+        });
+    </script>
+{% endblock %}

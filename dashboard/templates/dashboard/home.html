@@ -1,0 +1,22 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard - Wayne Enterprises{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Wayne Enterprises Analytics Dashboard</h1>
+
+    <div class="flex flex-wrap justify-center gap-6">
+        <a href="{% url 'financial' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">Financial Data</a>
+        <a href="{% url 'hr' %}" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition">HR Analytics</a>
+        <a href="{% url 'rd' %}" class="bg-purple-500 text-white px-4 py-2 rounded-lg shadow hover:bg-purple-600 transition">R&D Portfolio</a>
+        <a href="{% url 'security' %}" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition">Security Data</a>
+        <a href="{% url 'supply' %}" class="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow hover:bg-yellow-600 transition">Supply Chain Analytics</a>
+    </div>    
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize charts here if needed
+    </script>
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Wayne Enterprises Analytics{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; }
+        .chart-container { max-width: 800px; margin: 40px auto; }
+        .table-container { max-width: 1000px; margin: 20px auto; }
+        .scrollable-table { max-height: 400px; overflow-y: auto; display: block; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+        th { background-color: #f7fafc; font-weight: bold; position: sticky; top: 0; z-index: 10; }
+        h2 { color: #2d3748; }
+        .pagination { margin-top: 20px; text-align: center; }
+        .pagination a { padding: 8px 16px; margin: 0 4px; border: 1px solid #e2e8f0; border-radius: 4px; text-decoration: none; color: #2d3748; }
+        .pagination a:hover { background-color: #edf2f7; }
+        .pagination .current { background-color: #4e79a7; color: white; border-color: #4e79a7; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-xl font-bold">Wayne Enterprises Analytics</h1>
+            <div class="space-x-4">
+                <a href="{% url 'base' %}" class="text-white hover:text-gray-300">Home</a>
+                <a href="{% url 'financial' %}" class="text-white hover:text-gray-300">Financial</a>
+                <a href="{% url 'hr' %}" class="text-white hover:text-gray-300">HR Analytics</a>
+                <a href="{% url 'rd' %}" class="text-white hover:text-gray-300">R&D Portfolio</a>
+                <a href="{% url 'security' %}" class="text-white hover:text-gray-300">Security</a>
+                <a href="{% url 'supply' %}" class="text-white hover:text-gray-300">Supply Chain</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto p-6">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

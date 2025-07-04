@@ -1,0 +1,137 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}HR Analytics - Wayne Enterprises{% endblock %}
+{% block content %}
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">HR Analytics</h1>
+
+    <!-- Bar Chart -->
+    <div class="flex items-center justify-center ">
+    <!-- Bar Chart -->
+        <div class="chart-container bg-white p-6 rounded-lg shadow-md gap-6 m-2 w-full mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Total Revenue by Division (2024)</h2>
+            <canvas id="barChart"></canvas>
+        </div>
+
+    <!-- Line Chart -->
+        <div class="chart-container bg-white p-6 rounded-lg shadow-md gap-6 m-2 w-full mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Revenue Trend by Quarter (2024)</h2>
+            <canvas id="lineChart"></canvas>
+        </div>
+
+    <!-- Pie Chart -->
+        <div class="chart-container bg-white p-6 rounded-lg shadow-md gap-6 m-2 w-full mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Net Profit Share by Division (2024)</h2>
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-container">
+        <h2 class="text-xl font-semibold mb-4">HR Analytics Summary</h2>
+        <table class="table-auto">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Employee Level</th>
+                    <th>Date</th>
+                    <th>Retention Rate (%)</th>
+                    <th>Satisfaction Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in page_obj %}
+                <tr>
+                    <td>{{ row.Department }}</td>
+                    <td>{{ row.Employee_Level }}</td>
+                    <td>{{ row.Date }}</td>
+                    <td>{{ row.Retention_Rate_Pct }}</td>
+                    <td>{{ row.Employee_Satisfaction_Score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="current" href="?page={{ num }}">{{ num }}</a>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ bar_labels|safe }},
+                datasets: [{
+                    label: 'Satisfaction Score',
+                    data: {{ bar_data|safe }},
+                    backgroundColor: ['#4e79a7', '#f28e2b', '#e15759'],
+                    borderColor: ['#3b5a7b', '#b86b1f', '#a83e3e'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 10, title: { display: true, text: 'Satisfaction Score' } },
+                    x: { title: { display: true, text: 'Division' } }
+                },
+                plugins: { legend: { display: true } }
+            }
+        });
+
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: {{ line_labels|safe }},
+                datasets: [{
+                    label: 'Retention Rate (%)',
+                    data: {{ line_data|safe }},
+                    borderColor: '#4e79a7',
+                    backgroundColor: 'rgba(78, 121, 167, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100, title: { display: true, text: 'Retention Rate (%)' } },
+                    x: { title: { display: true, text: 'Date' } }
+                },
+                plugins: { legend: { display: true } }
+            }
+        });
+
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ pie_labels|safe }},
+                datasets: [{
+                    label: 'Training Hours',
+                    data: {{ pie_data|safe }},
+                    backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2'],
+                    borderColor: ['#3b5a7b', '#b86b1f', '#a83e3e', '#538684'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'right' } }
+            }
+        });
+    </script>
+{% endblock %}
